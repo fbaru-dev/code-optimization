@@ -1,0 +1,16 @@
+--- GSimulation.cpp	2016-09-01 13:51:47.874307000 +0200
++++ GSimulation.cpp	2016-09-01 14:00:54.963230000 +0200
+@@ -150,6 +150,13 @@
+    ts0 += time.start();
+    for (i = 0; i < n; i++)// update acceleration
+    {
++    __assume_aligned(particles->pos_x, alignment);
++    __assume_aligned(particles->pos_y, alignment);
++    __assume_aligned(particles->pos_z, alignment);
++    __assume_aligned(particles->acc_x, alignment);
++    __assume_aligned(particles->acc_y, alignment);
++    __assume_aligned(particles->acc_z, alignment);
++    __assume_aligned(particles->mass, alignment);
+     real_type px_i = particles->pos_x[i];
+     real_type py_i = particles->pos_y[i];
+     real_type pz_i = particles->pos_z[i];
