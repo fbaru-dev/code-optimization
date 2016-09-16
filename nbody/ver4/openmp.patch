@@ -1,0 +1,30 @@
+--- GSimulation.cpp	2016-09-01 17:32:02.414100000 +0200
++++ GSimulation.cpp	2016-09-01 17:30:30.004538000 +0200
+@@ -153,7 +153,9 @@
+ //---------------------------------
+ // start of parallel region
+ //---------------------------------
++#pragma omp parallel
+   {
++   #pragma omp for private(i,j) 
+    for (i = 0; i < n; i++)// update acceleration
+    {
+     __assume_aligned(particles->pos_x, alignment);
+@@ -195,7 +197,7 @@
+ 	particles->acc_z[i] = az_i;
+    }
+       energy = 0;
+-
++      #pragma omp for reduction(+:energy)
+       for (i = 0; i < n; ++i)// update position
+       {
+ 		particles->vel_x[i] += particles->acc_x[i] * dt;	//2flops
+@@ -252,6 +254,8 @@
+   dev=sqrt(dev/(double)(nf-2)-av*av);
+   
+   int nthreads=1;
++  #pragma omp parallel
++  nthreads=omp_get_num_threads();
+ 
+   std::cout << std::endl;
+   std::cout << "# Number Threads     : " << nthreads << std::endl;	   
