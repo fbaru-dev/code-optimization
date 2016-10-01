@@ -150,7 +150,7 @@ void GSimulation :: start()
    ts0 += time.start();
    for (i = 0; i < n; i++)// update acceleration
    {
-    real_type px_i = particles->pos_x[i];
+        real_type px_i = particles->pos_x[i];
 	real_type py_i = particles->pos_y[i];
 	real_type pz_i = particles->pos_z[i];
 	real_type ax_i = particles->acc_x[i];
