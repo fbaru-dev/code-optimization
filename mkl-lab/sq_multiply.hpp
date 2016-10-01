@@ -31,6 +31,7 @@ static void sq_multiply_2(real_type* c, real_type* a, real_type* b, const int nr
 static void sq_multiply_3(real_type* c, real_type* a, real_type* b, const int nrows_a, const int ncols_b, const int ncols_a);
 static void sq_multiply_4(real_type* c, real_type* a, real_type* b, const int nrows_a, const int ncols_b, const int ncols_a);
 static void sq_multiply_5(real_type* c, real_type* a, real_type* b, const int nrows_a, const int ncols_b, const int ncols_a);
+static void sq_multiply_6(real_type* c, real_type* a, real_type* b, const int nrows_a, const int ncols_b, const int ncols_a);
 
 static void sq_multiply_0(real_type* c, real_type* a, real_type* b, const int nrows_a, const int ncols_b, const int ncols_a)
 {
@@ -54,6 +55,18 @@ static void sq_multiply_1(real_type* c, real_type* a, real_type* b, const int nr
 
 static void sq_multiply_2(real_type* c, real_type* a, real_type* b, const int nrows_a, const int ncols_b, const int ncols_a)
 {
+	for(int j=0; j<ncols_b; ++j)		//jik
+	  for(int i=0; i<nrows_a; ++i)		
+	  {
+		real_type sum = 0.0;
+	    for(int k=0; k<ncols_a; ++k)
+	      sum += a[i*ncols_a + k] * b[k*ncols_b + j];
+	    c[i*ncols_b + j]= sum;
+	  }
+}
+
+static void sq_multiply_3(real_type* c, real_type* a, real_type* b, const int nrows_a, const int ncols_b, const int ncols_a)
+{
 	for(int k=0; k<ncols_a; ++k)		//kij
 	  for(int i=0; i<nrows_a; ++i)
 	  {
@@ -63,7 +76,7 @@ static void sq_multiply_2(real_type* c, real_type* a, real_type* b, const int nr
 	  }
 }
 
-static void sq_multiply_3(real_type* c, real_type* a, real_type* b, const int nrows_a, const int ncols_b, const int ncols_a)
+static void sq_multiply_4(real_type* c, real_type* a, real_type* b, const int nrows_a, const int ncols_b, const int ncols_a)
 {
 	for(int i=0; i<nrows_a; ++i)		//ikj
 	  for(int k=0; k<ncols_a; ++k)
@@ -74,7 +87,7 @@ static void sq_multiply_3(real_type* c, real_type* a, real_type* b, const int nr
 	  }
 }
 
-static void sq_multiply_4(real_type* c, real_type* a, real_type* b, const int nrows_a, const int ncols_b, const int ncols_a)
+static void sq_multiply_5(real_type* c, real_type* a, real_type* b, const int nrows_a, const int ncols_b, const int ncols_a)
 {
 	for(int j=0; j<ncols_b; ++j)		//jki
 	  for(int k=0; k<ncols_a; ++k)
@@ -85,7 +98,7 @@ static void sq_multiply_4(real_type* c, real_type* a, real_type* b, const int nr
 	  }
 }
 
-static void sq_multiply_5(real_type* c, real_type* a, real_type* b, const int nrows_a, const int ncols_b, const int ncols_a)
+static void sq_multiply_6(real_type* c, real_type* a, real_type* b, const int nrows_a, const int ncols_b, const int ncols_a)
 {
 	for(int k=0; k<ncols_a; ++k)		//kij
 	  for(int i=0; i<nrows_a; ++i)
