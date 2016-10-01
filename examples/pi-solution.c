@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  *
  */
-//To compile icc -O2 -qopenmp pi.c -o pi.x
+//To compile icc -qopenmp pi.c -o pi.x
 
 #include <stdio.h>
 #include <math.h>
