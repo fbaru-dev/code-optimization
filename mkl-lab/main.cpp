@@ -67,7 +67,7 @@ int main(int argc, char** argv)
   tt = time.start();
   for (int s=1; s<=nsteps; ++s)
   {  
-	c->initialize(0.0);   
+    c->initialize(0.0);   
     t0 = time.start();
       sq_multiply_0(c->values, a->values, b->values, a->nrows, b->ncols, a-> ncols);
     t1 = time.stop();
