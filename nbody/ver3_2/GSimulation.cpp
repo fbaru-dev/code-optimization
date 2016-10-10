@@ -132,7 +132,7 @@ void GSimulation :: start()
   _totTime = 0.; 
   
   const float softeningSquared = 0.001215f*0.001215f;
-  const float G = 6.67259e-11;
+  const float G = 6.67259e-11f;
   
   CPUTime time;
   double ts0 = 0;
