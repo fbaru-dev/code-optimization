@@ -153,6 +153,10 @@ void GSimulation :: start()
  	    distanceSqr = sqrt(dx*dx + dy*dy + dz*dz) + softeningSquared;		//6flops+sqrt
  	    distanceInv = 1.0 / sqrt(distanceSqr);					//1div+1sqrt
 
+	    //distance_2 = dx*dx + dy*dy + dz*dz + softening (prevents explosion in the case i=j and acelleration);
+ 	    //distance_32 = pow(distance_2,3.0/2.0);					//1div+1sqrt	  
+            //particles[i].acc[0] += dx * G * dist_32;	       //6flops
+		  
 	    particles[i].acc[0] += dx * G * particles[j].mass * distanceInv * distanceInv * distanceInv;	//6flops
 	    particles[i].acc[1] += dy * G * particles[j].mass * distanceInv * distanceInv * distanceInv;	//6flops
 	    particles[i].acc[2] += dz * G * particles[j].mass * distanceInv * distanceInv * distanceInv;	//6flops
