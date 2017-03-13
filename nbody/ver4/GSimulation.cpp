@@ -131,7 +131,7 @@ void GSimulation :: start()
   
   _totTime = 0.; 
   
-  const float softeningSquared = 0.001215f*0.001215f;
+  const float softeningSquared = 0.01f*0.01f;
   const float G = 6.67259e-11f;
   
   CPUTime time;
@@ -140,7 +140,7 @@ void GSimulation :: start()
   int i,j;
   real_type energy;
   
-  double gflops = 1e-9 * ( (12. + 18. ) * double( (n*n-1) ) +  double(n) * 19. );
+  double gflops = 1e-9 * ( (11. + 18. ) * double( (n*n-1) ) +  double(n) * 19. );
   double av=0.0, dev=0.0;
   int nf = 0;
   
@@ -181,8 +181,8 @@ void GSimulation :: start()
 	    dy = particles->pos_y[j] - py_i;		//1flop	
 	    dz = particles->pos_z[j] - pz_i;		//1flop
 	
- 	    distanceSqr = sqrtf(dx*dx + dy*dy + dz*dz) + softeningSquared;		//6flops+sqrt
- 	    distanceInv = 1.0f / sqrtf(distanceSqr);					//1div+1sqrt
+ 	    distanceSqr = dx*dx + dy*dy + dz*dz + softeningSquared;		//6flops
+ 	    distanceInv = 1.0f / sqrtf(distanceSqr);				//1div+1sqrt
 
 	    ax_i += dx * G * particles->mass[j] * distanceInv * distanceInv * distanceInv;	//6flops
 	    ay_i += dy * G * particles->mass[j] * distanceInv * distanceInv * distanceInv;	//6flops

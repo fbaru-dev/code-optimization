@@ -119,7 +119,7 @@ void GSimulation :: start()
   
   _totTime = 0.; 
   
-  const float softeningSquared = 0.001215f*0.001215f;
+  const float softeningSquared = 0.01f*0.01f;
   const float G = 6.67259e-11f;
   
   CPUTime time;
@@ -128,7 +128,7 @@ void GSimulation :: start()
   int i,j;
   real_type energy;
   
-  double gflops = 1e-9 * ( (12. + 18. ) * double( (n*n-1) ) +  double(n) * 19. );
+  double gflops = 1e-9 * ( (11. + 18. ) * double( (n*n-1) ) +  double(n) * 19. );
   double av=0.0, dev=0.0;
   int nf = 0;
   
@@ -140,7 +140,7 @@ void GSimulation :: start()
    {
 	for (j = 0; j < n; j++)
 	{
-	  if (i < j || i > j)
+	  if (i != j)
 	  {
 	    real_type distance, dx, dy, dz;
 	    real_type distanceSqr = 0.0f;
@@ -150,16 +150,15 @@ void GSimulation :: start()
 	    dy = particles[j].pos[1] - particles[i].pos[1];		//1flop	
 	    dz = particles[j].pos[2] - particles[i].pos[2];		//1flop
 	
- 	    distanceSqr = sqrtf(dx*dx + dy*dy + dz*dz) + softeningSquared;		//6flops+sqrt
- 	    distanceInv = 1.0f / sqrtf(distanceSqr);					//1div+1sqrt
+ 	    distanceSqr = dx*dx + dy*dy + dz*dz + softeningSquared;		//6flops
+ 	    distanceInv = 1.0f / sqrtf(distanceSqr);				//1div+1sqrt
 
 	    particles[i].acc[0] += dx * G * particles[j].mass * distanceInv * distanceInv * distanceInv;	//6flops
 	    particles[i].acc[1] += dy * G * particles[j].mass * distanceInv * distanceInv * distanceInv;	//6flops
 	    particles[i].acc[2] += dz * G * particles[j].mass * distanceInv * distanceInv * distanceInv;	//6flops
-
 	  }
 	}
-   }
+   }	
       energy = 0;
 
       for (i = 0; i < n; ++i)// update position

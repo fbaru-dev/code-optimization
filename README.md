@@ -1,4 +1,3 @@
 # Code Optimization Tutorial
 This is a set of tutorial codes which I use to teach code optimization techniques and tools.
 
-TODO: check the new added part in the base version and try to think about cache blocking
