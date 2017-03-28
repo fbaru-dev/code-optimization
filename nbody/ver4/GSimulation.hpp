@@ -21,12 +21,12 @@
 #ifndef _GSIMULATION_HPP
 #define _GSIMULATION_HPP
 
-#include <random>
 #include <iomanip>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <stdlib.h>
 
 #include <omp.h>
 

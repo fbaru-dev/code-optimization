@@ -43,37 +43,33 @@ void GSimulation :: set_number_of_steps(int N)
 
 void GSimulation :: init_pos()  
 {
-  std::random_device rd;	//random number generator
-  std::mt19937 gen(42);  
-  std::uniform_int_distribution<int> unif_d(1,R_MAX);
+  int gen = 42; 
+  srand(gen);
   real_type max = static_cast<real_type> ( R_MAX );
   
   for(int i=0; i<get_npart(); ++i)
   {
-    real_type r = static_cast<real_type> ( unif_d(gen) );
+    real_type r = 1.0 + (rand() / (RAND_MAX/(max - 1.0)));
     particles->pos_x[i] = -1.0f + 2.0f * r / max; 
     particles->pos_y[i] = -1.0f + 2.0f * r / max;  
-    particles->pos_z[i] = -1.0f + 2.0f * r / max; 
-    
+    particles->pos_z[i] = -1.0f + 2.0f * r / max;     
   }
-  
 }
 
 void GSimulation :: init_vel()  
 {
-  std::random_device rd;	//random number generator
-  std::mt19937 gen(42);  
-  std::uniform_int_distribution<int> unif_d(1,R_MAX);
-  real_type max = static_cast<real_type> ( R_MAX );
+  int gen = 42;
+  srand(gen);
+  real_type n   = static_cast<real_type> (get_npart());
+  real_type max = static_cast<real_type> (R_MAX);
 
   for(int i=0; i<get_npart(); ++i)
   {
-    real_type r = static_cast<real_type> ( unif_d(gen) );
+    real_type r = 1.0 + (rand() / (RAND_MAX/(max - 1.0)));
     particles->vel_x[i] = -1.0e-4f + 2.0f * r / max * 1.0e-4f ; 
     particles->vel_y[i] = -1.0e-4f + 2.0f * r / max * 1.0e-4f ; 
     particles->vel_z[i] = -1.0e-4f + 2.0f * r / max * 1.0e-4f ; 
   }
-  
 }
 
 void GSimulation :: init_acc() 
@@ -88,16 +84,14 @@ void GSimulation :: init_acc()
 
 void GSimulation :: init_mass() 
 {
-  std::random_device rd;	//random number generator
-  std::mt19937 gen(42);  
-  std::uniform_int_distribution<int> unif_d(1,R_MAX);
-  
-  real_type n = static_cast<real_type> (get_npart());
+  int gen = 42;
+  srand(gen);
+  real_type n   = static_cast<real_type> (get_npart());
   real_type max = static_cast<real_type> (R_MAX);
 
   for(int i=0; i<get_npart(); ++i)
   {
-    real_type r = static_cast<real_type> ( unif_d(gen) );
+    real_type r = 1.0 + (rand() / (RAND_MAX/(max - 1.0)));
     particles->mass[i] = n + n * r / max; 
   }
 }
@@ -160,7 +154,7 @@ void GSimulation :: start()
 	{
 	 if (j != i)
 	  {
-	    real_type distance, dx, dy, dz;
+	    real_type dx, dy, dz;
 	    real_type distanceSqr = 0.0f;
 	    real_type distanceInv = 0.0f;
 		  
