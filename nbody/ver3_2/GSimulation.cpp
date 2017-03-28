@@ -60,7 +60,6 @@ void GSimulation :: init_vel()
 {
   int gen = 42;
   srand(gen);
-  real_type n   = static_cast<real_type> (get_npart());
   real_type max = static_cast<real_type> (R_MAX);
 
   for(int i=0; i<get_npart(); ++i)
@@ -98,20 +97,25 @@ void GSimulation :: init_mass()
 
 void GSimulation :: start() 
 {
+  real_type energy;
+  real_type dt = get_tstep();
+  int n = get_npart();
+  int i,j;
+  
   //allocate particles
   const int alignment = 32;
-  particles = (ParticleSoA*) _mm_malloc(get_npart()*sizeof(ParticleSoA),alignment);
+  particles = (ParticleSoA*) _mm_malloc(sizeof(ParticleSoA),alignment);
   
-  particles->pos_x = (real_type*) _mm_malloc(get_npart()*sizeof(real_type),alignment);
-  particles->pos_y = (real_type*) _mm_malloc(get_npart()*sizeof(real_type),alignment);
-  particles->pos_z = (real_type*) _mm_malloc(get_npart()*sizeof(real_type),alignment);
-  particles->vel_x = (real_type*) _mm_malloc(get_npart()*sizeof(real_type),alignment);
-  particles->vel_y = (real_type*) _mm_malloc(get_npart()*sizeof(real_type),alignment);
-  particles->vel_z = (real_type*) _mm_malloc(get_npart()*sizeof(real_type),alignment);
-  particles->acc_x = (real_type*) _mm_malloc(get_npart()*sizeof(real_type),alignment);
-  particles->acc_y = (real_type*) _mm_malloc(get_npart()*sizeof(real_type),alignment);
-  particles->acc_z = (real_type*) _mm_malloc(get_npart()*sizeof(real_type),alignment);
-  particles->mass  = (real_type*) _mm_malloc(get_npart()*sizeof(real_type),alignment);
+  particles->pos_x = (real_type*) _mm_malloc(n*sizeof(real_type),alignment);
+  particles->pos_y = (real_type*) _mm_malloc(n*sizeof(real_type),alignment);
+  particles->pos_z = (real_type*) _mm_malloc(n*sizeof(real_type),alignment);
+  particles->vel_x = (real_type*) _mm_malloc(n*sizeof(real_type),alignment);
+  particles->vel_y = (real_type*) _mm_malloc(n*sizeof(real_type),alignment);
+  particles->vel_z = (real_type*) _mm_malloc(n*sizeof(real_type),alignment);
+  particles->acc_x = (real_type*) _mm_malloc(n*sizeof(real_type),alignment);
+  particles->acc_y = (real_type*) _mm_malloc(n*sizeof(real_type),alignment);
+  particles->acc_z = (real_type*) _mm_malloc(n*sizeof(real_type),alignment);
+  particles->mass  = (real_type*) _mm_malloc(n*sizeof(real_type),alignment);
 
   init_pos();	
   init_vel();
@@ -119,9 +123,6 @@ void GSimulation :: start()
   init_mass();
   
   print_header();
-  
-  real_type dt = get_tstep();
-  int n = get_npart();
   
   _totTime = 0.; 
   
@@ -131,8 +132,6 @@ void GSimulation :: start()
   CPUTime time;
   double ts0 = 0;
   double ts1 = 0;
-  int i,j;
-  real_type energy;
   
   double gflops = 1e-9 * ( (11. + 18. ) * double( (n*n-1) ) +  double(n) * 19. );
   double av=0.0, dev=0.0;

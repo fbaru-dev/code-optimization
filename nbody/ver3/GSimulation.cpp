@@ -60,7 +60,6 @@ void GSimulation :: init_vel()
 {
   int gen = 42;
   srand(gen);
-  real_type n   = static_cast<real_type> (get_npart());
   real_type max = static_cast<real_type> (R_MAX);
 
   for(int i=0; i<get_npart(); ++i)
@@ -98,19 +97,24 @@ void GSimulation :: init_mass()
 
 void GSimulation :: start() 
 {
-  //allocate particles
-  particles = new ParticleSoA[get_npart()];
+  real_type energy;
+  real_type dt = get_tstep();
+  int n = get_npart();
+  int i,j;
   
-  particles->pos_x = new real_type[get_npart()];
-  particles->pos_y = new real_type[get_npart()];
-  particles->pos_z = new real_type[get_npart()];
-  particles->vel_x = new real_type[get_npart()];
-  particles->vel_y = new real_type[get_npart()];
-  particles->vel_z = new real_type[get_npart()];
-  particles->acc_x = new real_type[get_npart()];
-  particles->acc_y = new real_type[get_npart()];
-  particles->acc_z = new real_type[get_npart()];
-  particles->mass  = new real_type[get_npart()]; 
+  //allocate particles
+  particles = new ParticleSoA;
+  
+  particles->pos_x = new real_type[n];
+  particles->pos_y = new real_type[n];
+  particles->pos_z = new real_type[n];
+  particles->vel_x = new real_type[n];
+  particles->vel_y = new real_type[n];
+  particles->vel_z = new real_type[n];
+  particles->acc_x = new real_type[n];
+  particles->acc_y = new real_type[n];
+  particles->acc_z = new real_type[n];
+  particles->mass  = new real_type[n]; 
 
   init_pos();	
   init_vel();
@@ -118,9 +122,6 @@ void GSimulation :: start()
   init_mass();
   
   print_header();
-  
-  real_type dt = get_tstep();
-  int n = get_npart();
   
   _totTime = 0.; 
   
@@ -130,8 +131,6 @@ void GSimulation :: start()
   CPUTime time;
   double ts0 = 0;
   double ts1 = 0;
-  int i,j;
-  real_type energy;
   
   double gflops = 1e-9 * ( (11. + 18. ) * double( (n*n-1) ) +  double(n) * 19. );
   double av=0.0, dev=0.0;

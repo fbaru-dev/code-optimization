@@ -52,8 +52,7 @@ void GSimulation :: init_pos()
     real_type r = 1.0 + (rand() / (RAND_MAX/(max - 1.0)));
     particles[i].pos[0] = -1.0f + 2.0f * r / max; 
     particles[i].pos[1] = -1.0f + 2.0f * r / max;
-    particles[i].pos[2] = -1.0f + 2.0f * r / max;
-    
+    particles[i].pos[2] = -1.0f + 2.0f * r / max   
   }
 }
 
@@ -96,9 +95,13 @@ void GSimulation :: init_mass()
   }
 }
 
-
 void GSimulation :: start() 
 {
+  real_type energy;
+  real_type dt = get_tstep();
+  int n = get_npart();
+  int i,j;
+  
   //allocate particles
   particles = new Particle[get_npart()];
  
@@ -109,9 +112,6 @@ void GSimulation :: start()
   
   print_header();
   
-  real_type dt = get_tstep();
-  int n = get_npart();
-  
   _totTime = 0.; 
   
   const float softeningSquared = 0.01f*0.01f;
@@ -120,8 +120,6 @@ void GSimulation :: start()
   CPUTime time;
   double ts0 = 0;
   double ts1 = 0;
-  int i,j;
-  real_type energy;
   
   double gflops = 1e-9 * ( (11. + 18. ) * double( (n*n-1) ) +  double(n) * 19. );
   double av=0.0, dev=0.0;
