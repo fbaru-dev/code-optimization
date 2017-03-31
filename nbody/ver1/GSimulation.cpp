@@ -51,9 +51,9 @@ void GSimulation :: init_pos()
   {
     real_type r = static_cast<real_type>(rand()) / static_cast<real_type>(RAND_MAX); 
     r = (max - 1.0f) * r + 1.0f;
-    particles->pos_x[i] = -1.0f + 2.0f * r / max; 
-    particles->pos_y[i] = -1.0f + 2.0f * r / max;  
-    particles->pos_z[i] = -1.0f + 2.0f * r / max;     
+    particles[i].pos[0] = -1.0f + 2.0f * r / max; 
+    particles[i].pos[1] = -1.0f + 2.0f * r / max;  
+    particles[i].pos[2] = -1.0f + 2.0f * r / max;     
   }
 }
 
@@ -67,9 +67,9 @@ void GSimulation :: init_vel()
   {
     real_type r = static_cast<real_type>(rand()) / static_cast<real_type>(RAND_MAX); 
     r = (max - 1.0f) * r + 1.0f;
-    particles->vel_x[i] = -1.0e-4 + 2.0f * r / max * 1.0e-4f;  
-    particles->vel_y[i] = -1.0e-4 + 2.0f * r / max * 1.0e-4f; 
-    particles->vel_z[i] = -1.0e-4 + 2.0f * r / max * 1.0e-4f; 
+    particles[i].vel[0] = -1.0e-4 + 2.0f * r / max * 1.0e-4f;  
+    particles[i].vel[1] = -1.0e-4 + 2.0f * r / max * 1.0e-4f; 
+    particles[i].vel[2] = -1.0e-4 + 2.0f * r / max * 1.0e-4f; 
   }
 }
 
@@ -77,9 +77,9 @@ void GSimulation :: init_acc()
 {
   for(int i=0; i<get_npart(); ++i)
   {
-    particles->acc_x[i] = 0; 
-    particles->acc_y[i] = 0;
-    particles->acc_z[i] = 0;
+    particles[i].acc[0] = 0; 
+    particles[i].acc[1] = 0;
+    particles[i].acc[2] = 0;
   }
 }
 
@@ -94,7 +94,7 @@ void GSimulation :: init_mass()
   {
     real_type r = static_cast<real_type>(rand()) / static_cast<real_type>(RAND_MAX); 
     r = (max - 1.0f) * r + 1.0f;
-    particles->mass[i] =  n + n * r / max; 
+    particles[i].mass =  n + n * r / max; 
   }
 }
 
@@ -131,51 +131,51 @@ void GSimulation :: start()
   const double t0 = time.start();
   for (int s=1; s<=get_nsteps(); ++s)
   {   
-   ts0 += time.start(); 
-   for (i = 0; i < n; i++)// update acceleration
-   {
-	for (j = 0; j < n; j++)
-	{
-	  if (i != j)
-	  {
-	    real_type dx, dy, dz;
-	    real_type distanceSqr = 0.0f;
-	    real_type distanceInv = 0.0f;
-		  
-	    dx = particles[j].pos[0] - particles[i].pos[0];		//1flop
-	    dy = particles[j].pos[1] - particles[i].pos[1];		//1flop	
-	    dz = particles[j].pos[2] - particles[i].pos[2];		//1flop
-	
- 	    distanceSqr = dx*dx + dy*dy + dz*dz + softeningSquared;		//6flops
- 	    distanceInv = 1.0f / sqrtf(distanceSqr);				//1div+1sqrt
-
-	    particles[i].acc[0] += dx * G * particles[j].mass * distanceInv * distanceInv * distanceInv;	//6flops
-	    particles[i].acc[1] += dy * G * particles[j].mass * distanceInv * distanceInv * distanceInv;	//6flops
-	    particles[i].acc[2] += dz * G * particles[j].mass * distanceInv * distanceInv * distanceInv;	//6flops
-	  }
-	}
-   }	
-      energy = 0;
-
-      for (i = 0; i < n; ++i)// update position
+    ts0 += time.start(); 
+    for (i = 0; i < n; i++)// update acceleration
+    {
+      for (j = 0; j < n; j++)
       {
-		particles[i].vel[0] += particles[i].acc[0] * dt;	//2flops
-		particles[i].vel[1] += particles[i].acc[1] * dt;	//2flops
-		particles[i].vel[2] += particles[i].acc[2] * dt;	//2flops
-	  
-		particles[i].pos[0] += particles[i].vel[0] * dt;	//2flops
-		particles[i].pos[1] += particles[i].vel[1] * dt;	//2flops
-		particles[i].pos[2] += particles[i].vel[2] * dt;	//2flops
-
-		particles[i].acc[0] = 0.;
-		particles[i].acc[1] = 0.;
-		particles[i].acc[2] = 0.;
+	if (j != i)
+	{
+	  real_type dx, dy, dz;
+	  real_type distanceSqr = 0.0f;
+	  real_type distanceInv = 0.0f;
+		  
+	  dx = particles[j].pos[0] - particles[i].pos[0];	//1flop
+	  dy = particles[j].pos[1] - particles[i].pos[1];	//1flop	
+	  dz = particles[j].pos[2] - particles[i].pos[2];	//1flop
 	
-		energy += particles[i].mass * (
-				  particles[i].vel[0]*particles[i].vel[0] + 
-                  particles[i].vel[1]*particles[i].vel[1] +
-                  particles[i].vel[2]*particles[i].vel[2]);	//7flops
+	  distanceSqr = dx*dx + dy*dy + dz*dz + softeningSquared;	//6flops
+	  distanceInv = 1.0 / sqrt(distanceSqr);			//1div+1sqrt
+		  
+	  particles[i].acc[0] += dx * G * particles[j].mass * distanceInv * distanceInv * distanceInv;	//6flops
+	  particles[i].acc[1] += dy * G * particles[j].mass * distanceInv * distanceInv * distanceInv;	//6flops
+	  particles[i].acc[2] += dz * G * particles[j].mass * distanceInv * distanceInv * distanceInv;	//6flops
+	}
       }
+    }
+    energy = 0;
+
+    for (i = 0; i < n; ++i)// update position
+    {
+      particles[i].vel[0] += particles[i].acc[0] * dt; //2flops
+      particles[i].vel[1] += particles[i].acc[1] * dt; //2flops
+      particles[i].vel[2] += particles[i].acc[2] * dt; //2flops
+	 
+      particles[i].pos[0] += particles[i].vel[0] * dt; //2flops
+      particles[i].pos[1] += particles[i].vel[1] * dt; //2flops
+      particles[i].pos[2] += particles[i].vel[2] * dt; //2flops
+
+      particles[i].acc[0] = 0.;
+      particles[i].acc[1] = 0.;
+      particles[i].acc[2] = 0.;
+	
+      energy += particles[i].mass * (
+	        particles[i].vel[0]*particles[i].vel[0] + 
+                particles[i].vel[1]*particles[i].vel[1] +
+                particles[i].vel[2]*particles[i].vel[2]); //7flops
+    }
   
     _kenergy = 0.5 * energy; 
     

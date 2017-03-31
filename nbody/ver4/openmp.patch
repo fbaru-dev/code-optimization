@@ -1,25 +1,25 @@
---- GSimulation.cpp	2017-03-28 10:06:25.798562000 +0200
-+++ GSimulation.cpp	2017-03-28 10:24:11.988725000 +0200
+--- GSimulation.cpp	2017-03-31 12:45:43.189485000 +0200
++++ GSimulation.cpp	2017-03-31 12:47:28.485826000 +0200
 @@ -147,7 +147,9 @@
  //---------------------------------
- // start of parallel region
+ // TODO: Parallelize this region
  //---------------------------------
 +  #pragma omp parallel
-   {
-+   #pragma omp for   
+   {  // start of parallel region
++   #pragma omp parallel for schedule (dynamic) 
     for (i = 0; i < n; i++)// update acceleration
     {
-     __assume_aligned(particles->pos_x, alignment);
-@@ -189,7 +191,7 @@
- 	particles->acc_z[i] = az_i;
+      __assume_aligned(particles->pos_x, alignment);
+@@ -188,7 +190,7 @@
+      particles->acc_z[i] = az_i;
     }
-       energy = 0;
+    energy = 0;
 -
-+      #pragma omp for reduction(+:energy)
-       for (i = 0; i < n; ++i)// update position
-       {
- 		particles->vel_x[i] += particles->acc_x[i] * dt;	//2flops
-@@ -246,6 +248,8 @@
++   #pragma omp for reduction(+:energy)
+    for (i = 0; i < n; ++i)// update position
+    {
+      particles->vel_x[i] += particles->acc_x[i] * dt; //2flops
+@@ -245,6 +247,8 @@
    dev=sqrt(dev/(double)(nf-2)-av*av);
    
    int nthreads=1;

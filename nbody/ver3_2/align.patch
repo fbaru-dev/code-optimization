@@ -1,16 +1,16 @@
---- GSimulation.cpp	2017-03-28 10:15:31.836389000 +0200
-+++ GSimulation.cpp	2017-03-28 10:16:56.487479000 +0200
-@@ -144,6 +144,13 @@
+--- GSimulation.cpp	2017-03-31 12:42:41.631553000 +0200
++++ GSimulation.cpp	2017-03-31 12:42:53.081243000 +0200
+@@ -146,6 +146,13 @@
     ts0 += time.start();
     for (i = 0; i < n; i++)// update acceleration
     {
-+    __assume_aligned(particles->pos_x, alignment);
-+    __assume_aligned(particles->pos_y, alignment);
-+    __assume_aligned(particles->pos_z, alignment);
-+    __assume_aligned(particles->acc_x, alignment);
-+    __assume_aligned(particles->acc_y, alignment);
-+    __assume_aligned(particles->acc_z, alignment);
-+    __assume_aligned(particles->mass, alignment);
-     real_type px_i = particles->pos_x[i];
-     real_type py_i = particles->pos_y[i];
-     real_type pz_i = particles->pos_z[i];
++     __assume_aligned(particles->pos_x, alignment);
++     __assume_aligned(particles->pos_y, alignment);
++     __assume_aligned(particles->pos_z, alignment);
++     __assume_aligned(particles->acc_x, alignment);
++     __assume_aligned(particles->acc_y, alignment);
++     __assume_aligned(particles->acc_z, alignment);
++     __assume_aligned(particles->mass, alignment);
+      real_type px_i = particles->pos_x[i];
+      real_type py_i = particles->pos_y[i];
+      real_type pz_i = particles->pos_z[i];
