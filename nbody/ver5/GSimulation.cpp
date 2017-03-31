@@ -49,7 +49,8 @@ void GSimulation :: init_pos()
   
   for(int i=0; i<get_npart(); ++i)
   {
-    real_type r = 1.0 + (rand() / (RAND_MAX/(max - 1.0)));
+    real_type r = static_cast<real_type>(rand()) / static_cast<real_type>(RAND_MAX); 
+    r = (max - 1.0f) * r + 1.0f;
     particles->pos_x[i] = -1.0f + 2.0f * r / max; 
     particles->pos_y[i] = -1.0f + 2.0f * r / max;  
     particles->pos_z[i] = -1.0f + 2.0f * r / max;     
@@ -60,14 +61,15 @@ void GSimulation :: init_vel()
 {
   int gen = 42;
   srand(gen);
-  real_type max = static_cast<real_type> (R_MAX);
+  real_type max = static_cast<real_type> (RAND_MAX);
 
   for(int i=0; i<get_npart(); ++i)
   {
-    real_type r = 1.0 + (rand() / (RAND_MAX/(max - 1.0)));
-    particles->vel_x[i] = -1.0e-4f + 2.0f * r / max * 1.0e-4f ; 
-    particles->vel_y[i] = -1.0e-4f + 2.0f * r / max * 1.0e-4f ; 
-    particles->vel_z[i] = -1.0e-4f + 2.0f * r / max * 1.0e-4f ; 
+    real_type r = static_cast<real_type>(rand()) / static_cast<real_type>(RAND_MAX); 
+    r = (max - 1.0f) * r + 1.0f;
+    particles->vel_x[i] = -1.0e-4 + 2.0f * r / max * 1.0e-4f;  
+    particles->vel_y[i] = -1.0e-4 + 2.0f * r / max * 1.0e-4f; 
+    particles->vel_z[i] = -1.0e-4 + 2.0f * r / max * 1.0e-4f; 
   }
 }
 
@@ -86,12 +88,13 @@ void GSimulation :: init_mass()
   int gen = 42;
   srand(gen);
   real_type n   = static_cast<real_type> (get_npart());
-  real_type max = static_cast<real_type> (R_MAX);
+  real_type max = static_cast<real_type> (RAND_MAX);
 
   for(int i=0; i<get_npart(); ++i)
   {
-    real_type r = 1.0 + (rand() / (RAND_MAX/(max - 1.0)));
-    particles->mass[i] = n + n * r / max; 
+    real_type r = static_cast<real_type>(rand()) / static_cast<real_type>(RAND_MAX); 
+    r = (max - 1.0f) * r + 1.0f;
+    particles->mass[i] =  n + n * r / max; 
   }
 }
 
@@ -105,7 +108,7 @@ void GSimulation :: start()
   //allocate particles
   const int alignment = 32;
   particles = (ParticleSoA*) _mm_malloc(sizeof(ParticleSoA),alignment);
-  
+
   particles->pos_x = (real_type*) _mm_malloc(n*sizeof(real_type),alignment);
   particles->pos_y = (real_type*) _mm_malloc(n*sizeof(real_type),alignment);
   particles->pos_z = (real_type*) _mm_malloc(n*sizeof(real_type),alignment);
@@ -143,7 +146,7 @@ void GSimulation :: start()
    ts0 += time.start();
   #pragma omp parallel
   {
-   #pragma omp for schedule(dynamic)  
+   #pragma omp for schedule(dynamic) 
    for (i = 0; i < n; i++)// update acceleration
    {
     __assume_aligned(particles->pos_x, alignment);
@@ -206,7 +209,7 @@ void GSimulation :: start()
                   particles->vel_z[i]*particles->vel_z[i]);	//7flops
       }
   }
-
+ 
     _kenergy = 0.5 * energy; 
     
     ts1 += time.stop();

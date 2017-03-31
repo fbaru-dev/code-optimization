@@ -49,7 +49,8 @@ void GSimulation :: init_pos()
   
   for(int i=0; i<get_npart(); ++i)
   {
-    real_type r = 1.0 + (rand() / (RAND_MAX/(max - 1.0)));
+    real_type r = static_cast<real_type>(rand()) / static_cast<real_type>(RAND_MAX); 
+    r = (max - 1.0f) * r + 1.0f;
     particles->pos_x[i] = -1.0f + 2.0f * r / max; 
     particles->pos_y[i] = -1.0f + 2.0f * r / max;  
     particles->pos_z[i] = -1.0f + 2.0f * r / max;     
@@ -60,14 +61,15 @@ void GSimulation :: init_vel()
 {
   int gen = 42;
   srand(gen);
-  real_type max = static_cast<real_type> (R_MAX);
+  real_type max = static_cast<real_type> (RAND_MAX);
 
   for(int i=0; i<get_npart(); ++i)
   {
-    real_type r = 1.0 + (rand() / (RAND_MAX/(max - 1.0)));
-    particles->vel_x[i] = -1.0e-4f + 2.0f * r / max * 1.0e-4f ; 
-    particles->vel_y[i] = -1.0e-4f + 2.0f * r / max * 1.0e-4f ; 
-    particles->vel_z[i] = -1.0e-4f + 2.0f * r / max * 1.0e-4f ; 
+    real_type r = static_cast<real_type>(rand()) / static_cast<real_type>(RAND_MAX); 
+    r = (max - 1.0f) * r + 1.0f;
+    particles->vel_x[i] = -1.0e-4 + 2.0f * r / max * 1.0e-4f;  
+    particles->vel_y[i] = -1.0e-4 + 2.0f * r / max * 1.0e-4f; 
+    particles->vel_z[i] = -1.0e-4 + 2.0f * r / max * 1.0e-4f; 
   }
 }
 
@@ -86,12 +88,13 @@ void GSimulation :: init_mass()
   int gen = 42;
   srand(gen);
   real_type n   = static_cast<real_type> (get_npart());
-  real_type max = static_cast<real_type> (R_MAX);
+  real_type max = static_cast<real_type> (RAND_MAX);
 
   for(int i=0; i<get_npart(); ++i)
   {
-    real_type r = 1.0 + (rand() / (RAND_MAX/(max - 1.0)));
-    particles->mass[i] = n + n * r / max; 
+    real_type r = static_cast<real_type>(rand()) / static_cast<real_type>(RAND_MAX); 
+    r = (max - 1.0f) * r + 1.0f;
+    particles->mass[i] =  n + n * r / max; 
   }
 }
 
