@@ -135,8 +135,8 @@ void GSimulation :: start()
   CPUTime time;
   double ts0 = 0;
   double ts1 = 0;
-  
-  double gflops = 1e-9 * ( (11. + 18. ) * double( (n*n-1) ) +  double(n) * 19. );
+  double nd = double(n);
+  double gflops = 1e-9 * ( (11. + 18. ) * nd*(nd-1.0)  +  nd * 19. );
   double av=0.0, dev=0.0;
   int nf = 0;
   
